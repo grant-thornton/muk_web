@@ -35,35 +35,40 @@ var _t = core._t;
 core.form_widget_registry.get("binary").include({
 	initialize_content: function() {
         var self = this;
+        // TODO Revisar if -> binary_value
         this._super();
-        if (this.get("effective_readonly")) {
-        	var $preview = this.$el.parent().find('.o_binary_preview');
-        	if($preview.length) {
-        		$preview.show();
-        	} else {
-	        	var $button = $('<button type="button" class="o_binary_preview" aria-hidden="true" />');
-	        	$button.append($('<i class="fa fa-file-text-o"></i>'));
-	        	$button.insertBefore(this.$el);
-	        	$button.click(function(e) {
-	                e.preventDefault();
-	        		e.stopPropagation();
-	                var value = self.get('value');
-	                var filename_fieldname = self.node.attrs.filename;
-	                var filename_field = self.view.fields && filename_fieldname && self.view.fields[filename_fieldname];
-	                var filename = filename_field ? filename_field.get('value') : null;
-	                PreviewDialog.createPreviewDialog(self, '/web/content?' + $.param({
-	                    'model': self.view.dataset.model,
-	                    'id': self.view.datarecord.id,
-	                    'field': self.name,
-	                    'filename_field': filename_fieldname,
-	                    'filename': filename,
-	                    'download': true,
-	                    'data': utils.is_bin_size(value) ? null : value,
-	                }), false, filename ? filename.split('.').pop() : false, filename);
-	        	});
-        	}
+        if (this.get("binary_value")) {
+	        if (this.get("effective_readonly")) {
+	        	var $preview = this.$el.parent().find('.o_binary_preview');
+	        	if($preview.length) {
+	        		$preview.show();
+	        	} else {
+		        	var $button = $('<button type="button" class="o_binary_preview" aria-hidden="true" attrs="{\'invisible\':[(\'onedrive_id\',\'!=\',False)]}"/>');
+		        	$button.append($('<i class="fa fa-file-text-o"></i>'));
+		        	$button.insertBefore(this.$el);
+		        	$button.click(function(e) {
+		                e.preventDefault();
+		        		e.stopPropagation();
+		                var value = self.get('value');
+		                var filename_fieldname = self.node.attrs.filename;
+		                var filename_field = self.view.fields && filename_fieldname && self.view.fields[filename_fieldname];
+		                var filename = filename_field ? filename_field.get('value') : null;
+		                PreviewDialog.createPreviewDialog(self, '/web/content?' + $.param({
+		                    'model': self.view.dataset.model,
+		                    'id': self.view.datarecord.id,
+		                    'field': self.name,
+		                    'filename_field': filename_fieldname,
+		                    'filename': filename,
+		                    'download': true,
+		                    'data': utils.is_bin_size(value) ? null : value,
+		                }), false, filename ? filename.split('.').pop() : false, filename);
+		        	});
+	        	}
+	        } else {
+	        	this.$el.parent().find('.o_binary_preview').hide();
+	        }
         } else {
-        	this.$el.parent().find('.o_binary_preview').hide();
+        	return {}
         }
     },
 });
