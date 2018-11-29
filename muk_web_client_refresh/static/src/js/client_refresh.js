@@ -31,14 +31,16 @@ WebClient.include({
         return this._super();
     },
     refresh: function(message) {
-    	var active_view = this.action_manager.inner_widget.active_view
-        if (active_view){   
-            var controller = this.action_manager.inner_widget.active_view.controller
-            if (controller.model === message  && !controller.$el.hasClass('o_form_editable')){                                               
-                if (active_view.type === "kanban")
-                    controller.do_reload();
-                if (active_view.type === "list" || active_view.type === "form")
-                    controller.reload();                                        
+        if (this.action_manager.inner_widget){
+        	var active_view = this.action_manager.inner_widget.active_view
+            if (active_view){   
+                var controller = this.action_manager.inner_widget.active_view.controller
+                if (controller.model === message  && !controller.$el.hasClass('o_form_editable')){                                               
+                    if (active_view.type === "kanban")
+                        controller.do_reload();
+                    if (active_view.type === "list" || active_view.type === "form")
+                        controller.reload();                                        
+                }
             }
         }
     }
